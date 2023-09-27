@@ -38,5 +38,6 @@ public static class ServiceProviderExtensions
     private static IServiceCollection AddCustomServices(this IServiceCollection services) =>
         services
             .AddScoped<IBotService, BotService>()
-            .AddScoped<IUserService, UserService>();
+            .AddScoped<IUserService, UserService>()
+            .AddScoped<ITaskService, TaskService>();
 }

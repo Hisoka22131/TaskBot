@@ -79,7 +79,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
 
     protected async Task<TEntity> GetEntity(int? id) => await _context.FindAsync<TEntity>(id);
 
-    protected TEntity GetEntity(Expression<Func<TEntity, bool>> predicate,
+    protected async Task<TEntity> GetEntity(Expression<Func<TEntity, bool>> predicate,
         params Expression<Func<TEntity, object>>[] includes) =>
         includes.Aggregate(_dbSet.Where(predicate), (current, includeProperty) => current.Include(includeProperty))
             .FirstOrDefault();

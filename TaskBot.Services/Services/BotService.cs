@@ -1,8 +1,5 @@
 ﻿using Newtonsoft.Json;
-using TaskBot.Repository.Repo.Abstract;
-using TaskBot.Repository.UoF;
 using TaskBot.Services.Commands;
-using TaskBot.Services.Commands.Interfaces;
 using TaskBot.Services.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -12,16 +9,25 @@ namespace TaskBot.Services.Services;
 
 public class BotService : IBotService
 {
-    private readonly ITelegramBotClient _telegramBotClient;
-    private readonly IUserService _userService;
-
-    public BotService(ITelegramBotClient telegramBotClient, IUserService userService)
+    public BotService(ITelegramBotClient telegramBotClient, IUserService userService, ITaskService taskService)
     {
         _telegramBotClient = telegramBotClient;
         _userService = userService;
+        _taskService = taskService;
     }
 
+    #region Properties
 
+    private readonly ITelegramBotClient _telegramBotClient;
+    
+    private readonly IUserService _userService;
+
+    private readonly ITaskService _taskService;
+
+    private static readonly Dictionary<long, string> _createTaskDict = new();
+    
+    #endregion
+    
     public async Task<object> Handle(object update)
     {
         try
@@ -59,20 +65,51 @@ public class BotService : IBotService
 
         switch (command)
         {
-            case not null when command.StartsWith("/start"):
+            case not null when command.StartsWith(Enums.Commands.Start.GetDescription()):
             {
-                var invoker = new CommandInvoker(new SendMessageCommand());
+                var invoker = new CommandInvoker();
+                await invoker.SetCommand(new SendMessageCommand());
+                
                 await invoker.ExecuteCommand(_telegramBotClient, update, "Привет, " + update.Message.Chat.Username);
 
                 break;
             }
-            case not null when command.StartsWith("/gettasks"):
+            case not null when command.StartsWith(Enums.Commands.GetTasks.GetDescription()):
             {
                 var tasks = await _userService.GetUserTasks(update.Message.Chat.Id);
 
-                var invoker = new CommandInvoker(new SendMessageCommand());
-                await invoker.ExecuteCommand(_telegramBotClient, update, tasks);
+                var invoker = new CommandInvoker();
+                await invoker.SetCommand(new SendTaskFileCommand(tasks));
+                
+                await invoker.ExecuteCommand(_telegramBotClient, update, "Ваши задачи:");
 
+                break;
+            }
+            case not null when command.StartsWith(Enums.Commands.CreateTask.GetDescription()):
+            {
+                _createTaskDict.Add(update.Message.Chat.Id, Enums.Commands.CreateTask.GetDescription());
+                
+                var invoker = new CommandInvoker();
+                await invoker.SetCommand(new SendMessageCommand());
+                
+                await invoker.ExecuteCommand(_telegramBotClient, update, "Введите номер задачи и описание через пробел!");
+                
+                break;
+            }
+            default:
+            {
+                if (_createTaskDict.ContainsKey(update.Message.Chat.Id) && _createTaskDict[update.Message.Chat.Id] ==
+                    Enums.Commands.CreateTask.GetDescription())
+                {
+                    var message =  await _taskService.CreateTask(command!, update.Message.Chat.Id);
+                    
+                    var invoker = new CommandInvoker();
+                    await invoker.SetCommand(new SendMessageCommand());
+                
+                    await invoker.ExecuteCommand(_telegramBotClient, update, message);
+                    
+                    _createTaskDict.Remove(update.Message.Chat.Id);
+                }
                 break;
             }
         }

@@ -6,16 +6,17 @@ namespace TaskBot.Repository.UoF;
 
 public class UnitOfWork : IUnitOfWork
 {
-    private readonly TaskContext _dbContext;
-
     public UnitOfWork()
     {
         _dbContext = new TaskContext();
         UserRepository = new UserRepo(_dbContext);
+        TaskRepository = new TaskRepo(_dbContext);
     }
     
+    private readonly TaskContext _dbContext;
     
     public IUserRepository UserRepository { get; set; }
+    public ITaskRepository TaskRepository { get; set; }
     
     public async void Dispose() => await _dbContext.DisposeAsync();
 

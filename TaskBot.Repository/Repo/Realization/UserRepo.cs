@@ -11,5 +11,5 @@ public class UserRepo : GenericRepository<User>, IUserRepository
     {
     }
 
-    public User GetUser(long id) => GetEntity(q => q.ChatId == id, q => q.Tasks);
+    public async Task<User> GetUser(long chatId) => await GetEntity(q => q.ChatId == chatId, q => q.Tasks);
 }

@@ -7,5 +7,5 @@ namespace TaskBot.Services.Commands;
 public class SendMessageCommand : ICommand
 {
     public async Task Execute(ITelegramBotClient telegramBotClient, Update update, string message) =>
-        await telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id, message);
+        await telegramBotClient.SendTextMessageAsync(update.Message!.Chat.Id, message);
 }

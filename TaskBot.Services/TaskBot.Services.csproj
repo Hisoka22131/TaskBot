@@ -18,4 +18,8 @@
       <ProjectReference Include="..\TaskBot.Repository\TaskBot.Repository.csproj" />
     </ItemGroup>
 
+
+
+
+
 </Project>

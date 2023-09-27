@@ -6,6 +6,8 @@ public class Task : EntityBase
 
     public string? Description { get; set; }
 
+    public string TaskName => Number + "-" + Description;
+
     public string? Result { get; set; }
 
     public bool IsClosed { get; set; }

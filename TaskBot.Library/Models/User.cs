@@ -6,5 +6,5 @@ public class User : EntityBase
     
     public long ChatId { get; set; }
 
-    public ICollection<Task> Tasks { get; set; }
+    public ICollection<Task> Tasks { get; set; } = new List<Task>();
 }
