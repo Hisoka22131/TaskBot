@@ -1,0 +1,38 @@
+*.exe
+*.dll
+.vs
+bin/
+obj/
+*.user
+TaskBot.IoC/obj/
+TaskBot.IoC/bin/
+
+TaskBot.Library/obj/
+TaskBot.Library/bin/
+
+TaskBot.Repository/obj/
+TaskBot.Repository/bin/
+
+TaskBot.Web/obj/
+TaskBot.Web/bin/
+
+TaskBot.Services/obj/
+TaskBot.Services/bin/
+
+.idea/
+
+# Исключить все файлы с расширениями изображений
+TaskBot.Web/wwwroot/images/
+
+*.jpg
+*.jpeg
+*.png
+
+# Исключить все файлы видео
+*.mp4
+*.avi
+*.mov
+
+# Исключить все файлы аудио
+*.mp3
+*.wav
