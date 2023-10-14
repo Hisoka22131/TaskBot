@@ -20,17 +20,18 @@ public class UserService : IUserService
     
     public async Task CheckUser(Update update)
     {
-        if (await UserRepository.Any(q => q.UserName == update.Message!.Chat.Username)) return;
+        if (await UserRepository.Any(q => q.TelegramUserId == update.Message!.From!.Id)) return;
 
         var user = new User
         {
-            UserName = update.Message!.Chat.Username!,
-            ChatId = update.Message.Chat.Id
+            UserName = update.Message!.From!.Username!,
+            ChatId = update.Message.Chat.Id,
+            TelegramUserId = update.Message.From.Id
         };
 
         await UserRepository.Insert(user);
         await _unitOfWork.Save();
     }
 
-    public async Task<ICollection<Library.Models.Task>> GetUserTasks(long userChatId) => UserRepository.GetUser(userChatId).Result.Tasks;
+    public async Task<ICollection<Library.Models.Task>> GetUserTasks(long telegramUserId) => UserRepository.GetUser(telegramUserId).Result.Tasks;
 }

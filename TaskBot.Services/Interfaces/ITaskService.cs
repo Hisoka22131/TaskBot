@@ -2,5 +2,7 @@
 
 public interface ITaskService
 {
-    Task<string> CreateTask(string taskString, long chatId);
+    Task<string> CreateTask(string taskString, long telegramUserId);
+
+    Task<string> CloseTask(string taskNumber, long telegramUserId);
 }

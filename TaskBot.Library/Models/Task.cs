@@ -8,6 +8,8 @@ public class Task : EntityBase
 
     public string TaskName => Number + "-" + Description;
 
+    public string TaskClose => IsClosed ? "Закрыта" : "Открыта";
+
     public string? Result { get; set; }
 
     public bool IsClosed { get; set; }

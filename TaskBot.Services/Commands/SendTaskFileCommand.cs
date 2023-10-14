@@ -9,10 +9,10 @@ public class SendTaskFileCommand : ICommand
 {
     public SendTaskFileCommand(ICollection<Library.Models.Task> tasks)
     {
-        Tasks = tasks;
+        _tasks = tasks;
     }
 
-    private ICollection<Library.Models.Task> Tasks;
+    private readonly ICollection<Library.Models.Task> _tasks;
 
     public async Task Execute(ITelegramBotClient telegramBotClient, Update update, string message)
     {
@@ -20,10 +20,12 @@ public class SendTaskFileCommand : ICommand
 
         try
         {
-            foreach (var task in Tasks)
+            foreach (var task in _tasks)
             {
                 await File.AppendAllTextAsync(tempFileName,
-                    $"Задача: # {task.Number}\nОписание: {task.Description}\nРезультат: {task.Result}\n\n");
+                    $"Задача: # {task.Number} {task.TaskClose}\n" + 
+                    $"Описание: {task.Description}\n" +
+                    $"Результат: {task.Result}\n\n");
             }
 
             await using var stream = File.OpenRead(tempFileName);
@@ -33,7 +35,7 @@ public class SendTaskFileCommand : ICommand
         }
         catch (Exception ex)
         {
-            await  telegramBotClient.SendTextMessageAsync(update.Message!.Chat.Id, $"Произошла ошибка: {ex.Message}");
+            await telegramBotClient.SendTextMessageAsync(update.Message!.Chat.Id, $"Произошла ошибка: {ex.Message}");
             throw;
         }
     }

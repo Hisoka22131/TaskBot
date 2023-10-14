@@ -11,5 +11,8 @@ public enum Commands: byte
     GetTasks,
     
     [Description("/createtask")]
-    CreateTask
+    CreateTask,
+    
+    [Description("/closetask")]
+    CloseTask
 }
