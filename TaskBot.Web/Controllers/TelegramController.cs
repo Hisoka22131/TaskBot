@@ -5,24 +5,15 @@ using TaskBot.Services.Interfaces;
 namespace TaskBot.Web.Controllers;
 
 [ApiController]
-[Route("api/message")]
+[Route("api/telegram/message")]
 [AllowAnonymous]
-public class BotController : ControllerBase
+public class TelegramController : ControllerBase
 {
     private readonly ITelegramBotService _telegramBotService;
-    private readonly IDiscordBotService _discordBotService;
 
-    public BotController(ITelegramBotService telegramBotService, IDiscordBotService discordBotService)
-    {
-        _telegramBotService = telegramBotService;
-        _discordBotService = discordBotService;
-    }
+    public TelegramController(ITelegramBotService telegramBotService) => _telegramBotService = telegramBotService;
     
     [HttpPost]
-    [Route("telegram/update")]
-    public async Task<IActionResult> TelegramRequest([FromBody] object update) => new OkObjectResult(await _telegramBotService.Handle(update));
+    public async Task<IActionResult> TelegramRequest([FromBody] object update) => new OkObjectResult(await _telegramBotService.HandleMessage(update));
     
-    [HttpPost]
-    [Route("discord/update")]
-    public async Task<IActionResult> DiscordRequest([FromBody] object update) => new OkObjectResult(await _discordBotService.Handle(update));
 }

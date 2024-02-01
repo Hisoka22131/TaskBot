@@ -1,6 +1,6 @@
 ﻿namespace TaskBot.Services.Interfaces;
 
-public class ITelegramBotService
+public interface ITelegramBotService
 {
-    
+    Task<object> HandleMessage(object update);
 }

@@ -7,9 +7,9 @@ using Telegram.Bot.Types.Enums;
 
 namespace TaskBot.Services.Services;
 
-public class BotService : ITelegramBotService
+public class TelegramBotService : ITelegramBotService
 {
-    public BotService(ITelegramBotClient telegramBotClient, IUserService userService, ITaskService taskService)
+    public TelegramBotService(ITelegramBotClient telegramBotClient, IUserService userService, ITaskService taskService)
     {
         _telegramBotClient = telegramBotClient;
         _userService = userService;
@@ -30,7 +30,7 @@ public class BotService : ITelegramBotService
 
     #endregion
 
-    public async Task<object> Handle(object update)
+    public async Task<object> HandleMessage(object update)
     {
         try
         {
