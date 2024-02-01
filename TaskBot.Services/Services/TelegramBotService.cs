@@ -7,7 +7,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace TaskBot.Services.Services;
 
-public class BotService : IBotService
+public class BotService : ITelegramBotService
 {
     public BotService(ITelegramBotClient telegramBotClient, IUserService userService, ITaskService taskService)
     {
